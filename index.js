@@ -4,6 +4,8 @@ const app = express();
 const hostname= '0.0.0.0'
 const port = 3002;
 
+const HashMap = {"email":"sagarkumarn949@gmail.com","password":"sagar1234"};
+
 var admin = require("firebase-admin");
 var serviceAccount = require("./shorturl-7919f-firebase-adminsdk-wrgdp-b2976be313.json");
 const { response } = require("express");
@@ -47,18 +49,18 @@ app.get("/:short", (req, res) => {
 app.post("/admin/urls/", (req, res) => {
     const {email, password, short, url} = req.body;
 
-    usersdb.doc(email).get().then(response=>{
-        const user = response.data();
-        // console.log(user);
+    // usersdb.doc(email).get().then(response=>{         //creating for calling users db
+    //     const user = response.data();
+    //     // console.log(user);
 
-        if(user && (user.email == email) && (user.password == password)){
+        if(HashMap.email == email && HashMap.password == password){
             const doc = urlsdb.doc(short);
             doc.set({url});
             res.send("Done")
         } else {
             res.send(403, "Not possible")
         }
-    })
+    // })
   
 //   res.send("Hello from another!");
 });
