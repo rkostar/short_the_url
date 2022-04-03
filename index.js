@@ -16,7 +16,7 @@ admin.initializeApp({
 
 const static = express.static("public");
 
-const urlsdb = admin.firestore().collection("urlsdb");
+const urlsdb = admin.firestore().collection("urldb");
 const usersdb = admin.firestore().collection("usersdb");
 
 app.use(static);
@@ -28,7 +28,7 @@ app.use(bodyParser.json());
 // })
 
 app.get("/:short", (req, res) => {
-    console.log(req.params);
+    // console.log(req.params);
     const short = req.params.short;
 
     const doc = urlsdb.doc(short);
@@ -37,6 +37,10 @@ app.get("/:short", (req, res) => {
         const data = response.data();
         // console.log(data);
         if(data && data.url){
+            var url= data.url;
+            var count= data.count;
+            count=count+1;
+            doc.set({url, count});
             res.redirect(301, data.url);
         } else {
             res.redirect(301, "https://google.com");
@@ -55,7 +59,8 @@ app.post("/admin/urls/", (req, res) => {
 
         if(HashMap.email == email && HashMap.password == password){
             const doc = urlsdb.doc(short);
-            doc.set({url});
+            const count=0;
+            doc.set({url, count});
             res.send("Done")
         } else {
             res.send(403, "Not possible")
